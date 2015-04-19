@@ -1,0 +1,18 @@
+import java.util.Scanner;
+
+public class Main
+{
+	 public static void main(String[] args)
+	{
+		Scanner K=new Scanner(System.in);
+		long m=K.nextLong();
+		long n=K.nextLong();
+		long a=K.nextLong();
+		long x=m/a;
+		long y=n/a;
+		if(m%a!=0)x++;
+		if(n%a!=0)y++;
+		System.out.println(x*y);
+		
+	}
+}
