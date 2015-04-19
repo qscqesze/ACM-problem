@@ -1,0 +1,77 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+//const int inf=0x7fffffff;   //无限大
+const int inf=0x3f3f3f3f;
+/*
+
+int buf[10];
+inline void write(int i) {
+  int p = 0;if(i == 0) p++;
+  else while(i) {buf[p++] = i % 10;i /= 10;}
+  for(int j = p-1; j >=0; j--) putchar('0' + buf[j]);
+  printf("\n");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+
+struct node
+{
+    ll x,y,z;
+};
+ll dis(node a,node b)
+{
+    return (a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z);
+}
+int main()
+{
+    int t;
+    t=read();
+    for(int cas=1;cas<=t;cas++)
+    {
+        node a[4];
+        for(int i=0;i<4;i++)
+            cin>>a[i].x>>a[i].y>>a[i].z;
+        int flag=0;
+        double t[10];
+        int cnt=0;
+        for(int i=0;i<4;i++)
+            for(int j=i+1;j<4;j++)
+                t[cnt++]=dis(a[i],a[j]);
+        sort(t,t+cnt);
+        if(t[1]==t[0]&&t[1]==t[2]&&t[2]==t[3]&&t[3]*2==t[4]&&t[4]==t[5])
+            flag=1;
+        if(flag)
+            printf("Case #%d: Yes\n",cas);
+        else
+            printf("Case #%d: No\n",cas);
+    }
+    return 0;
+}
