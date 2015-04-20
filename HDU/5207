@@ -1,0 +1,72 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 100101
+#define mod 10007
+#define eps 1e-9
+//const int inf=0x7fffffff;   //无限大
+const int inf=0x3f3f3f3f;
+/*
+
+int buf[10];
+inline void write(int i) {
+  int p = 0;if(i == 0) p++;
+  else while(i) {buf[p++] = i % 10;i /= 10;}
+  for(int j = p-1; j >=0; j--) putchar('0' + buf[j]);
+  printf("\n");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+
+int a[maxn];
+int cnt[maxn];
+int main()
+{
+    int t=read();
+    for(int cas=1;cas<=t;cas++)
+    {
+        memset(a,0,sizeof(a));
+        memset(cnt,0,sizeof(cnt));
+        int n=read();
+        for(int i=0;i<n;i++)
+        {
+            a[i]=read();
+            cnt[a[i]]++;
+        }
+        for(int i=1;i<maxn;i++)
+            for(int j=i+i;j<maxn;j+=i)
+                cnt[i]+=cnt[j];
+        int mx=0;
+        for(int i=maxn-1;i;i--)
+            if(cnt[i]>=2)
+            {
+                mx=i;
+                break;
+            }
+        printf("Case #%d: %d\n",cas,mx);
+    }
+}
