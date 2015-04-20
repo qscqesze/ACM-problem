@@ -1,0 +1,147 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 500001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+
+struct node{
+    int l,r,v;
+}a[maxn*4];
+struct ques
+{
+    int l,r,an,v;
+}qu[maxn];
+void build(int x,int l,int r)
+{
+    a[x].l=l,a[x].r=r;
+    a[x].v=maxn;
+    if(l==r)
+        return;
+    int mid=(l+r)>>1;
+    build(x<<1,l,mid);
+    build(x<<1|1,mid+1,r);
+}
+void pushup(int x)
+{
+    a[x].v=min(a[x<<1].v,a[x<<1|1].v);
+}
+void update(int x,int pos,int val)
+{
+    if(a[x].l==a[x].r)
+    {
+        a[x].v=val;
+        return;
+    }
+    int mid=(a[x].l+a[x].r)>>1;
+    if(pos<=mid)
+        update(x<<1,pos,val);
+    else
+        update(x<<1|1,pos,val);
+    pushup(x);
+}
+int mi;
+void query(int x,int l,int r)
+{
+    if(l<=a[x].r&&r>=a[x].r)
+    {
+        mi=min(mi,a[x].v);
+        return;
+    }
+    int mid=(a[x].l+a[x].r)>>1;
+    if(l<=mid)
+        query(x<<1,l,r);
+    if(r>mid)
+        query(x<<1|1,l,r);
+}
+map<int,int>mp;
+int d[maxn];
+bool cmp(ques a,ques b)
+{
+    return a.l>b.l;
+}
+int ans[maxn];
+int main()
+{
+    int n=read(),m=read();
+    build(1,1,n);
+    for(int i=1;i<=n;i++)
+        d[i]=read();
+    for(int i=1;i<=m;i++)
+    {
+        qu[i].l=read(),qu[i].r=read();
+        qu[i].v=i;
+    }
+    sort(qu+1,qu+1+m,cmp);
+    int t=1;
+    for(int i=n;i;i--)
+    {
+        if(mp[d[i]])
+        {
+            update(1,mp[d[i]],mp[d[i]]-i);
+        }
+        mp[d[i]]=i;
+        while(qu[t].l==i)
+        {
+            mi=maxn;
+            query(1,qu[t].l,qu[t].r);
+            if(mi==maxn)
+                mi=-1;
+            ans[qu[t].v]=mi;
+            t++;
+        }
+    }
+    for(int i=1;i<=m;i++)
+    {
+        if(ans[i]<0)
+            printf("-1\n");
+        else
+            P(ans[i]);
+    }
+}
