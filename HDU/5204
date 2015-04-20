@@ -1,0 +1,89 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+//const int inf=0x7fffffff;   //无限大
+const int inf=0x3f3f3f3f;
+/*
+
+int buf[10];
+inline void write(int i) {
+  int p = 0;if(i == 0) p++;
+  else while(i) {buf[p++] = i % 10;i /= 10;}
+  for(int j = p-1; j >=0; j--) putchar('0' + buf[j]);
+  printf("\n");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+    int x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+
+struct node
+{
+    ll x,num;
+};
+bool cmp(node a,node b)
+{
+    return a.x<b.x;
+}
+ll a[maxn];
+node b[maxn];
+int main()
+{
+    int n=read(),tot=0;
+    for(int i=0;i<n;i++)
+    {
+        int t=read();
+        if(t==1)
+            a[++tot]=read();
+        else
+        {
+            ll l,r,org;
+            scanf("%lld%lld%lld",&l,&r,&org);
+            int num=0;
+            for(int i=tot;i>=1;i--)
+            {
+                b[++num].x=a[i];
+                b[num].num=(r+1)/2-l/2;
+                r/=2;
+                l=(l+1)/2;
+                if(r<l)
+                    break;
+            }
+            sort(b+1,b+num+1,cmp);
+            for(int i=1;i<=num;i++)
+            {
+                org-=b[i].num;
+                if(org<=0)
+                {
+                    printf("%lld\n",b[i].x);
+                    break;
+                }
+            }
+        }
+    }
+}
