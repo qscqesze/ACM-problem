@@ -1,0 +1,137 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+vector<int> p;
+map<int,int>H;
+struct node
+{
+    int l,r,v;
+};
+node a[maxn*4];
+struct qu
+{
+    int x,y;
+}q[maxn];
+int flag[maxn];
+void build(int x,int l,int r)
+{
+    a[x].l=l,a[x].r=r;
+    a[x].v=0;
+    if(l==r)
+        return;
+    int mid=(l+r)>>1;
+    build(x<<1,l,mid);
+    build(x<<1|1,mid+1,r);
+}
+void relax(int x)
+{
+    if(a[x].v)
+    {
+        a[x<<1].v=a[x].v;
+        a[x<<1|1].v=a[x].v;
+        a[x].v=0;
+    }
+}
+void update(int st,int ed,int x,int val)
+{
+    int l=a[x].l,r=a[x].r;
+    if(st<=l&&r<=ed)
+        a[x].v=val;
+    else
+    {
+        relax(x);
+        int mid=(l+r)>>1;
+        if(st<=mid)update(st,ed,x<<1,val);
+        if(ed>mid)update(st,ed,x<<1|1,val);
+    }
+}
+void query(int x,int st,int ed)
+{
+    int l=a[x].l,r=a[x].r;
+    if(a[x].v!=0||l==r)
+    {
+        flag[a[x].v]=1;
+        return;
+    }
+    query(x<<1,st,ed);
+    query(x<<1|1,st,ed);
+}
+int main()
+{
+    int t=read();
+    while(t--)
+    {
+        H.clear(),p.clear();
+        int n=read();
+        for(int i=0;i<n;i++)
+        {
+            q[i].x=read(),q[i].y=read();
+            p.push_back(q[i].x);
+            p.push_back(q[i].y);
+        }
+        for(int i=1;i<=n;i++)
+            flag[i]=0;
+        sort(p.begin(),p.end());
+        p.erase(unique(p.begin(),p.end()),p.end());
+        for(int i=0;i<p.size();i++)
+            H[p[i]]=i+1;
+        build(1,1,p.size());
+        for(int i=0;i<n;i++)
+            update(H[q[i].x],H[q[i].y],1,i+1);
+        query(1,1,p.size());
+        int ans=0;
+        for(int i=1;i<=n;i++)
+            if(flag[i])
+                ans++;
+        printf("%d\n",ans);
+    }
+}
