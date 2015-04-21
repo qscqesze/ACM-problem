@@ -1,0 +1,105 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 500010
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+
+struct node
+{
+    int l,r,mx;
+};
+node a[maxn*4];
+int h,w,n;
+void build(int x,int l,int r)
+{
+    a[x].l=l,a[x].r=r;
+    a[x].mx=w;
+    if(l==r)
+        return;
+    int mid=(l+r)>>1;
+    build(x<<1,l,mid);
+    build(x<<1|1,mid+1,r);
+}
+int update(int x,int val)
+{
+    int l=a[x].l,r=a[x].r;
+    if(l==r)
+    {
+        a[x].mx-=val;
+        return l;
+    }
+    else
+    {
+        int ans=0;
+        if(a[x<<1].mx>=val)
+            ans=update(x<<1,val);
+        else
+            ans=update(x<<1|1,val);
+        a[x].mx=max(a[x<<1].mx,a[x<<1|1].mx);
+        return ans;
+    }
+}
+int d;
+int main()
+{
+    while(scanf("%d%d%d",&h,&w,&n)!=EOF)
+    {
+        memset(a,0,sizeof(a));
+        build(1,1,min(h,maxn));
+        for(int i=0;i<n;i++)
+        {
+            d=read();
+            if(a[1].mx<d)
+                puts("-1");
+            else
+                printf("%d\n",update(1,d));
+        }
+    }
+}
