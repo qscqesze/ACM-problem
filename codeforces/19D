@@ -1,0 +1,102 @@
+#include <iostream>  
+#include <cstdio>  
+#include <cstring>  
+#include <set>  
+#include <map>  
+#include <vector>  
+#include <algorithm>  
+using namespace std;  
+#define LL(x) (x<<1)  
+#define RR(x) (x<<1|1)  
+const int N=2e5+5;  
+  
+vector<int> sx;  
+map<int,int> imap;  
+  
+struct OP  
+{  
+    char str[10];  
+    int x,y;  
+    void input()  
+    {  
+        scanf("%s%d%d",str,&x,&y);  
+        sx.push_back(x);  
+    }  
+}op[N];  
+struct Segtree  
+{  
+    int imax[N*4];  
+    set<int> valu[N];  
+    void clear()  
+    {  
+        memset(imax,-1,sizeof(imax));  
+        for(int i=0;i<N;i++) valu[i].clear();  
+    }  
+    void add(int st,int ed,int ind,int x,int y)  
+    {  
+        imax[ind]=max(imax[ind],y);  
+        if(st==ed) valu[x].insert(y);//注意这里是x  
+        else  
+        {  
+            int mid=st+(ed-st)/2;  
+            if(x<=mid) add(st,mid,LL(ind),x,y);  
+            else add(mid+1,ed,RR(ind),x,y);  
+        }  
+    }  
+    void remove(int st,int ed,int ind,int x,int y)  
+    {  
+        if(st==ed)  
+        {  
+            valu[x].erase(y);  
+            imax[ind]=valu[x].empty()?-1:*(--valu[x].end());  
+        }  
+        else  
+        {  
+            int mid=st+(ed-st)/2;  
+            if(x<=mid) remove(st,mid,LL(ind),x,y);  
+            else remove(mid+1,ed,RR(ind),x,y);  
+            imax[ind]=max(imax[LL(ind)],imax[RR(ind)]);  
+        }  
+    }  
+    pair<int,int> find(int st,int ed,int ind,int x,int y)  
+    {  
+        if(imax[ind]<y||ed<x) return make_pair(-1,-1);  
+        if(st==ed) return make_pair(st,*(valu[st].lower_bound(y)));  
+        else  
+        {  
+            int mid=st+(ed-st)/2;  
+            pair<int,int> tmp=find(st,mid,LL(ind),x,y);  
+            if(tmp.first!=-1) return tmp;  
+            return find(mid+1,ed,RR(ind),x,y);  
+        }  
+    }  
+}seg;  
+int main()  
+{  
+    int n;  
+    while(scanf("%d",&n)!=EOF)  
+    {  
+        sx.clear();imap.clear();seg.clear();  
+        for(int i=0;i<n;i++) op[i].input();  
+  
+        sort(sx.begin(),sx.end());  
+        sx.erase(unique(sx.begin(),sx.end()),sx.end());  
+        int len=(int)sx.size()-1;  
+        for(int i=0;i<=len;i++) imap[sx[i]]=i;  
+  
+        for(int i=0;i<n;i++)  
+        {  
+            char ch=op[i].str[0];  
+            int x=op[i].x,y=op[i].y;  
+            if(ch=='a') seg.add(0,len,1,imap[x],y);  
+            else if(ch=='r') seg.remove(0,len,1,imap[x],y);  
+            else  
+            {  
+                pair<int,int> res=seg.find(0,len,1,imap[x]+1,y+1);  
+                if(res.first==-1) puts("-1");  
+                else printf("%d %d\n",sx[res.first],res.second);  
+            }  
+        }  
+    }  
+    return 0;  
+}  
