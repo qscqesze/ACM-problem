@@ -1,0 +1,130 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+    int x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+int du[100005];
+int vis[100005];
+vector<int> lin[100005];
+int n,m,k;
+int t[500005];
+int arr[100005];
+void build(int i,int l,int r)
+{
+    if (l==r)
+    {
+        t[i]=du[l];
+        arr[l]=i;
+        return;
+    }
+    int mid=(l+r)/2;
+    build(i*2,l,mid);
+    build(i*2+1,mid+1,r);
+    t[i]=min(t[i*2],t[i*2+1]);
+    return;
+}
+int query(int i,int l,int r,int k)
+{
+    if (l==r)
+        return l;
+    int mid=(l+r)/2;
+    if (t[i*2+1]<=k) return query(i*2+1,mid+1,r,k);
+    else return query(i*2,l,mid,k);
+}
+void insert(int i,int l,int r,int wei,int cc)
+{
+    if (l==r)
+    {
+        t[i]+=cc;
+        return;
+    }
+    int mid=(l+r)/2;
+    if (wei<=mid) insert(i*2,l,mid,wei,cc);
+    else insert(i*2+1,mid+1,r,wei,cc);
+    t[i]=min(t[i*2],t[i*2+1]);
+    return;
+}
+int main()
+{
+    while (cin>>n>>m>>k)
+    {
+        memset(vis,0,sizeof(vis));
+        memset(du,0,sizeof(du));
+        for (int i=1;i<=n;i++)
+            lin[i].clear();
+        int i,j;
+        for (int tt=1;tt<=m;tt++)
+        {
+            scanf("%d%d",&i,&j);
+            lin[i].push_back(j);
+            du[j]++;
+        }
+        int nn=0;
+        int flag=0;
+        build(1,1,n);
+        for (int i=1;i<=n;i++)
+        {
+            int c=query(1,1,n,k);
+            if (flag) printf(" ");
+            printf("%d",c);
+            flag=1;
+            k-=du[c];
+            insert(1,1,n,c,9999999);
+            for (int kk=0;kk<lin[c].size();kk++)
+            {
+                int j=lin[c][kk];
+                insert(1,1,n,j,-1);
+                du[j]--;
+            }
+
+        }
+        printf("\n");
+    }
+}
