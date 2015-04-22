@@ -1,0 +1,108 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+struct node
+{
+    int x,y;
+}a[maxn];
+int pa[maxn];
+int main()
+{
+    char s[10];
+    int b,c;
+    int t=read();
+    for(int cas=1;cas<=t;cas++)
+    {
+        int n=read();
+        memset(a,0,sizeof(a));
+        memset(pa,-1,sizeof(pa));
+        for(int i=0;i<n-1;i++)
+        {
+            int u=read(),v=read();
+            pa[u]=v;
+        }
+        for(int i=0;i<=n;i++)
+        {
+            a[i].x=-1;
+            a[i].y=-1;
+        }
+        int m=read();
+        printf("Case #%d:\n",cas);
+        int co=0;
+        for(int i=0;i<m;i++)
+        {
+            scanf("%s",s);
+            if(s[0]=='C')
+            {
+                b=read();
+                int k=a[b].x;
+                int y=a[b].y;
+                while(b!=-1)
+                {
+                    if(a[b].y>y)
+                    {
+                        k=a[b].x;
+                        y=a[b].y;
+                    }
+                    b=pa[b];
+                }
+                printf("%d\n",k);
+            }
+            else
+            {
+                b=read(),c=read();
+                a[b].x=c;
+                a[b].y=++co;
+            }
+        }
+    }
+}
