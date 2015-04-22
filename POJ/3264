@@ -1,0 +1,123 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+struct node
+{
+    int l,r,ma,mi;
+}a[maxn];
+int d[maxn];
+void build(int x,int l,int r)
+{
+    a[x].l=l,a[x].r=r;
+    a[x].ma=-inf,a[x].mi=inf;
+    if(l==r)
+    {
+        a[x].ma=d[l];
+        a[x].mi=d[l];
+        return;
+    }
+    else
+    {
+        int mid=(l+r)>>1;
+        build(x<<1,l,mid);
+        build(x<<1|1,mid+1,r);
+        a[x].ma=max(a[x<<1].ma,a[x<<1|1].ma);
+        a[x].mi=min(a[x<<1].mi,a[x<<1|1].mi);
+    }
+}
+int query1(int x,int st,int ed)
+{
+    int l=a[x].l,r=a[x].r;
+    if(st<=l&&r<=ed)
+        return a[x].mi;
+    else
+    {
+        int mid=(l+r)>>1;
+        int mi1=inf,mi2=inf;
+        if(st<=mid)
+            mi1=query1(x<<1,st,ed);
+        if(ed>mid)
+            mi2=query1(x<<1|1,st,ed);
+        return min(mi1,mi2);
+    }
+}
+
+int query2(int x,int st,int ed)
+{
+    int l=a[x].l,r=a[x].r;
+    if(st<=l&&r<=ed)
+        return a[x].ma;
+    else
+    {
+        int mid=(l+r)>>1;
+        int mi1=-inf,mi2=-inf;
+        if(st<=mid)
+            mi1=query2(x<<1,st,ed);
+        if(ed>mid)
+            mi2=query2(x<<1|1,st,ed);
+        return max(mi1,mi2);
+    }
+}
+
+int main()
+{
+    int n=read(),q=read();
+    int dd,ee;
+    for(int i=1;i<=n;i++)
+        d[i]=read();
+    build(1,1,n);
+    for(int i=0;i<q;i++)
+    {
+        dd=read(),ee=read();
+        printf("%d\n",query2(1,dd,ee)-query1(1,dd,ee));
+    }
+}
