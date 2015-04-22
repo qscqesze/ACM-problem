@@ -1,0 +1,149 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	ll x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+
+struct node
+{
+    int l,r;
+    ll cnt,sum;
+};
+node a[maxn*4];
+ll d[maxn];
+void build(int x,int l,int r)
+{
+    a[x].l=l,a[x].r=r;
+    a[x].cnt=0;
+    if(l==r)
+        a[x].sum=d[l];
+    else
+    {
+        int mid=(l+r)>>1;
+        build(x<<1,l,mid);
+        build(x<<1|1,mid+1,r);
+        a[x].sum=a[x<<1].sum+a[x<<1|1].sum;
+    }
+}
+void pushup(int x)
+{
+    a[x].sum=a[x<<1].sum+a[x<<1|1].sum;
+    if(a[x<<1].cnt>=7&&a[x<<1|1].cnt>=7)
+        a[x].cnt=7;
+}
+void update(int x,int st,int ed)
+{
+    int l=a[x].l,r=a[x].r;
+    if(a[x].cnt>=7)
+    {
+        a[x].sum=r-l+1;
+        return;
+    }
+    if(st<=l&&r<=ed)
+    {
+        a[x].cnt+=1;
+        if(l==r)
+            a[x].sum=sqrt(a[x].sum);
+        else
+        {
+            update(x<<1,st,ed);
+            update(x<<1|1,st,ed);
+            pushup(x);
+        }
+    }
+
+    else
+    {
+        int mid=(l+r)>>1;
+        if(st<=mid) update(x<<1,st,ed);
+        if(ed> mid) update(x<<1|1,st,ed);
+        pushup(x);
+    }
+}
+ll query(int x,int st,int ed)
+{
+    int l=a[x].l,r=a[x].r;
+    if(st<=l&&r<=ed)
+        return a[x].sum;
+    else
+    {
+        int mid=(l+r)>>1;
+        ll sum1=0,sum2=0;
+        if(st<=mid)
+            sum1=query(x<<1,st,ed);
+        if(ed>mid)
+            sum2=query(x<<1|1,st,ed);
+        return sum1+sum2;
+    }
+}
+int n,m,f,b,c;
+int main()
+{
+
+    int cas=1;
+    while(scanf("%d",&n)!=EOF)
+    {
+        memset(d,0,sizeof(d));
+        memset(a,0,sizeof(a));
+        for(int i=1;i<=n;i++)
+            d[i]=read();
+        printf("Case #%d:\n",cas++);
+        scanf("%d",&m);
+        build(1,1,n);
+        for(int i=0;i<m;i++)
+        {
+            f=read(),b=read(),c=read();
+            if(b>c)swap(b,c);
+            if(f==0)update(1,b,c);
+            else printf("%lld\n",query(1,b,c));
+        }
+        puts("");
+    }
+}
