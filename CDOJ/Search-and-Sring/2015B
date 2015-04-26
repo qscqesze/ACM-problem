@@ -1,0 +1,127 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+
+char s[1001][1001];
+int dp[1001][1001][8];
+int dx[8]={-1,0,0,1,1,0,0,-1};
+int dy[8]={0,1,1,0,0,-1,-1,0};
+int n,m;
+void dfs(int i,int j,int k)
+{
+    if(k%2==0)
+    {
+        if(i+dx[k]<0||i+dx[k]>=n||j+dy[k]<0||j+dy[k]>=m)
+            dp[i][j][k]=0;
+        else if(s[i+dx[k]][j+dy[k]]=='0')
+            dp[i][j][k]=0;
+        else
+        {
+            if(dp[i+dx[k]][j+dy[k]][k+1]==-1)
+                dfs(i+dx[k],j+dy[k],k+1);
+            dp[i][j][k]=1;
+            dp[i][j][k]+=dp[i+dx[k]][j+dy[k]][k+1];
+        }
+    }
+    else
+    {
+        if(i+dx[k]<0||i+dx[k]>=n||j+dy[k]<0||j+dy[k]>=m)
+            dp[i][j][k]=0;
+        else if(s[i+dx[k]][j+dy[k]]=='0')
+            dp[i][j][k]=0;
+        else
+        {
+            if(dp[i+dx[k]][j+dy[k]][k-1]==-1)
+                dfs(i+dx[k],j+dy[k],k-1);
+            dp[i][j][k]=1;
+            dp[i][j][k]+=dp[i+dx[k]][j+dy[k]][k-1];
+        }
+    }
+}
+int main()
+{
+    int t=read();
+    for(int cas=1;cas<=t;cas++)
+    {
+        n=read(),m=read();
+        for(int i=0;i<n;i++)
+            for(int j=0;j<m;j++)
+                for(int k=0;k<8;k++)
+                    dp[i][j][k]=-1;
+        for(int i=0;i<n;i++)
+            scanf("%s",s[i]);
+        int ans2=0;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(s[i][j]=='0')
+                    continue;
+                int ans=1;
+                if(dp[i][j][0]==-1)
+                    dfs(i,j,0);
+                ans+=dp[i][j][0];
+                if(dp[i][j][2]==-1)
+                    dfs(i,j,2);
+                ans+=dp[i][j][2];
+                if(dp[i][j][4]==-1)
+                    dfs(i,j,4);
+                ans+=dp[i][j][4];
+                if(dp[i][j][6]==-1)
+                    dfs(i,j,6);
+                ans+=dp[i][j][6];
+                ans2=max(ans2,ans);
+            }
+        }
+        printf("%d\n",ans2);
+    }
+}
