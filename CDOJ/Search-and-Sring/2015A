@@ -1,0 +1,128 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+
+string s[200][200];
+int vis[200][200][200];
+int dx[6]={0,0,1,-1,0,0};
+int dy[6]={1,-1,0,0,0,0};
+int dz[6]={0,0,0,0,1,-1};
+struct node
+{
+    int x,y,z;
+    ll t;
+};
+int l,r,c;
+int main()
+{
+    while(scanf("%d%d%d",&l,&r,&c)!=EOF)
+    {
+        memset(vis,0,sizeof(vis));
+        if(l==0&&r==0&&c==0)
+            break;
+        node st,ed;
+        for(int i=0;i<l;i++)
+            for(int j=0;j<r;j++)
+                cin>>s[i][j];
+        for(int i=0;i<l;i++)
+        {
+            for(int j=0;j<r;j++)
+            {
+                for(int k=0;k<c;k++)
+                {
+                    if(s[i][j][k]=='S')
+                    {
+                        st.x=i,st.y=j,st.z=k,st.t=0;
+                        vis[st.x][st.y][st.z]=1;
+                    }
+                }
+            }
+        }
+        int time=-1;
+        queue<node> q;
+        q.push(st);
+        while(!q.empty())
+        {
+            node now=q.front();
+            q.pop();
+            if(s[now.x][now.y][now.z]=='E')
+            {
+                time=now.t;
+                break;
+            }
+            for(int i=0;i<6;i++)
+            {
+                node next=now;
+                next.x+=dx[i];
+                next.y+=dy[i];
+                next.z+=dz[i];
+                next.t++;
+                if(next.x<0||next.x>=l)
+                    continue;
+                if(next.y<0||next.y>=r)
+                    continue;
+                if(next.z<0||next.z>=c)
+                    continue;
+                if(s[next.x][next.y][next.z]=='#')
+                    continue;
+                if(vis[next.x][next.y][next.z])
+                    continue;
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+        }
+        if(time==-1)
+            printf("Trapped!\n");
+        else
+            printf("Escaped in %d minute(s).\n",time);
+    }
+}
