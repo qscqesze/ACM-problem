@@ -1,0 +1,9 @@
+int powmod(int a,int b) {
+    LL ans = 1,x = a;
+    while (b) {
+        if (b & 1) ans = ans * x % MOD;
+        x = x * x % MOD;
+        b >>= 1;
+    }
+    return ans;
+}
