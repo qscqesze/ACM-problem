@@ -1,0 +1,17 @@
+const int MAXN = 100;
+bool flag[MAXN];
+int primes[MAXN], pi;
+void GetPrime_1()
+{
+    int i, j;
+    pi = 0;
+    memset(flag, false, sizeof(flag));
+    for (i = 2; i < MAXN; i++)
+        if (!flag[i])
+        {
+            primes[i] = 1;//素数标识为1
+            for (j = i; j < MAXN; j += i)
+                flag[j] = true;
+        }
+}
+注意memset一下
