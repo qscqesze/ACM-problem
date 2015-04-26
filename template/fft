@@ -1,0 +1,159 @@
+#34. 多项式乘法
+
+    描述
+    提交
+    自定义测试
+
+这是一道模板题。
+
+给你两个多项式，请输出乘起来后的多项式。
+输入格式
+
+第一行两个整数 n 和 m，分别表示两个多项式的次数。
+
+第二行 n+1 个整数，分别表示第一个多项式的 0 到 n 次项前的系数。
+
+第三行 m+1 个整数，分别表示第一个多项式的 0 到 m 次项前的系数。
+输出格式
+
+一行 n+m+1 个整数，分别表示乘起来后的多项式的 0 到 n+m 次项前的系数。
+样例一
+input
+
+1 2
+1 2
+1 2 1
+
+output
+
+1 4 5 2
+
+explanation
+
+(1+2x)?(1+2x+x2)=1+4x+5x2+2x3。
+限制与约定
+
+0≤n,m≤105，保证输入中的系数大于等于 0 且小于等于 9。
+
+时间限制：1s
+
+空间限制：256MB
+
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+typedef unsigned long long u64;
+typedef unsigned u32;
+
+const u32 P = 998244353;
+const u32 FFT_G = 3;
+
+const int MaxN = 100000;
+const int MaxFFTN = 262144;
+
+int preGPow[MaxFFTN];
+int preRevB[MaxFFTN];
+
+inline u32 getuint()
+{
+	char c;
+	while (c = getchar(), '0' > c || c > '9');
+
+	u32 res = c - '0';
+	while (c = getchar(), '0' <= c && c <= '9')
+		res = res * 10 + c - '0';
+	return res;
+}
+
+inline u32 modpow(u32 a, const u32 &n)
+{
+	u32 res = 1;
+	u32 t = a;
+	for (u32 i = n; i > 0; i >>= 1)
+	{
+		if (i & 1)
+			res = (u64)res * t % P;
+		t = (u64)t * t % P;
+	}
+	return res;
+}
+
+void fft(u32 *a, int n, u32 *out)
+{
+	for (int i = 0; i < n; i++)
+		out[preRevB[i]] = a[i];
+	int nl = 0;
+	while ((1 << nl) < n)
+		nl++;
+	for (int l = 0; l < nl; l++)
+	{
+		int m = 1 << l;
+		u32 g = preGPow[1 << (nl - l - 1)];
+		for (int s = 0; s < n; s += m * 2)
+		{
+			u32 cg = 1;
+			for (int i = s; i < s + m; i++)
+			{
+				u32 o = out[i], e = (u64)out[i + m] * cg % P;
+				out[i] = (o + e) % P;
+				out[i + m] = (o + P - e) % P;
+				cg = (u64)cg * g % P;
+			}
+		}
+	}
+}
+
+inline void polymulto(int n, u32 *a, int m, u32 *b)
+{
+	static u32 da[MaxFFTN];
+	static u32 db[MaxFFTN];
+
+	int tl = 0;
+	int tn = 1;
+	while (tn < n + m)
+		tn <<= 1, tl++;
+
+	for (int i = 1; i < tn; i++)
+		preRevB[i] = (preRevB[i >> 1] >> 1) | (i & 1) << (tl - 1);
+
+	u32 curG = modpow(FFT_G, (P - 1) / tn);
+	preGPow[0] = 1;
+	for (int i = 1; i < tn; i++)
+		preGPow[i] = (u64)preGPow[i - 1] * curG % P;
+
+	fft(a, tn, da);
+	fft(b, tn, db);
+
+	for (int i = 0; i < tn; i++)
+		da[i] = (u64)da[i] * db[i] % P;
+	reverse(preGPow + 1, preGPow + tn);
+
+	fft(da, tn, a);
+
+	u32 revTN = modpow(tn, P - 2);
+	for (int i = 0; i < tn; i++)
+		a[i] = (u64)a[i] * revTN % P;
+}
+
+int main()
+{
+	int n, m;
+	static u32 a[MaxFFTN], b[MaxFFTN];
+
+	cin >> n >> m;
+	n++, m++;
+	for (int i = 0; i < n; i++)
+		a[i] = getuint();
+	for (int i = 0; i < m; i++)
+		b[i] = getuint();
+
+	polymulto(n, a, m, b);
+
+	for (int i = 0; i < n + m - 1; i++)
+		printf("%u ", a[i]);
+	printf("\n");
+
+	return 0;
+}
