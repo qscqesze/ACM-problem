@@ -1,0 +1,124 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 55
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    int x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+char s[100][100];
+
+int vis[1000][1000];
+int dp[1000][1000];
+int main()
+{
+    int n=read();
+    for(int i=1;i<=n;i++)
+        scanf("%s",s[i]+1);
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(s[i][j]=='o')
+            {
+                for(int i1=1;i1<=n;i1++)
+                {
+                    for(int j1=1;j1<=n;j1++)
+                    {
+                        if(s[i1][j1]=='.')
+                            vis[n+i1-i][n+j1-j]=1;
+                    }
+                }    
+            }
+        }
+    }
+    
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(s[i][j]=='o')
+            {
+                for(int i1=1;i1<=n;i1++)
+                {
+                    for(int j1=1;j1<=n;j1++)
+                    {
+                        if(s[i1][j1]=='x'&&!vis[n+i1-i][n+j1-j])
+                            dp[i1][j1]=1;
+                    }
+                }    
+            }
+        }
+    }
+    
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(s[i][j]=='x'&&dp[i][j]!=1)
+            {
+                puts("NO");
+                return 0;
+            }
+        }
+    }
+    puts("YES");
+    for(int i=1;i<=2*n-1;i++)
+    {
+        for(int j=1;j<=2*n-1;j++)
+        {
+            if(i==n&&j==n)
+                cout<<"o";
+            else if(vis[i][j])
+                cout<<".";
+            else
+                cout<<"x";
+        }
+        cout<<endl;
+    }
+}
