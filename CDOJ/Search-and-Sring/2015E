@@ -1,0 +1,117 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+int a[100],n,sum,num;
+int vis[100];
+bool cmp(int aa,int bb)
+{
+    return aa>bb;
+}
+
+int dfs(int x,int y,int z,int len)
+{
+    if(x==num)
+        return 1;
+    for(int i=z+1;i<n;i++)
+    {
+        if(vis[i])
+            continue;
+        if(y+a[i]==len)
+        {
+            vis[i]=1;
+            if(dfs(x+1,0,-1,len))
+                return 1;
+            vis[i]=0;
+            return 0;
+        }
+        else if(y+a[i]<len)
+        {
+            vis[i]=1;
+            if(dfs(x,y+a[i],i,len))
+                return 1;
+            vis[i]=0;
+            if(y==0)
+                return 0;
+            while(a[i]==a[i+1])
+                i++;
+        }
+    }
+    return 0;
+}
+int main()
+{
+    while(scanf("%d",&n)!=EOF)
+    {
+        if(n==0)
+            break;
+        sum=0;
+        for(int i=0;i<n;i++)
+        {
+            scanf("%d",&a[i]);
+            sum+=a[i];
+        }
+        sort(a,a+n,cmp);
+        int i;
+        for(i=a[0];i<=sum;i++)
+        {
+            if(sum%i==0)
+            {
+                num=sum/i;
+                memset(vis,0,sizeof(vis));
+                if(dfs(1,0,-1,i))
+                    break;
+            }
+        }
+        printf("%d\n",i);
+    }
+}
