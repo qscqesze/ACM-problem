@@ -1,0 +1,82 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+ll a[maxn],n;
+ll tmp;
+
+int main()
+{
+    while(scanf("%lld",&n)!=EOF)
+    {
+        for(int i=0;i<n;i++)
+            scanf("%lld",&a[i]);
+        tmp=n*(n-1)/2;
+        sort(a,a+n);
+        ll l=0,r=722337203685477580;
+        while(l+1<r)
+        {
+            ll mid=(l+r)>>1;
+            ll ans=0;
+            for(int i=0;i<n;i++)
+            {
+                ans+=a+n-lower_bound(a+i+1,a+n,a[i]+mid);
+            }
+            if(ans<=tmp/2)
+                r=mid;
+            else
+                l=mid;
+        }
+        printf("%lld\n",l);
+    }
+
+}
