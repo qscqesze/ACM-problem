@@ -1,0 +1,96 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 6693161413
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+char s[110];
+
+vector<int > a;
+/*
+int ELFhash(char *key){
+
+    unsigned long h=0;
+    unsigned long x=0;
+
+    while(*key)
+    {
+        h=(h<<4)+(*key++);  //h左移4位，当前字符ASCII存入h的低四位
+                if( (x=h & 0xF0000000L)!=0)
+        { //如果最高位不为0，则说明字符多余7个，如果不处理，再加第九个字符时，第一个字符会被移出
+          //因此要有如下处理
+          h^=(x>>24);
+          //清空28~31位
+          h&=~x;
+        }
+    }
+    return h % mod;
+}
+*/
+int get_hash(char *key)
+{
+    ll N=1998585857;
+    long long h=0;
+    while(*key)
+        h=(h*127+(*key++)+N)%N;
+    return h%N;
+}
+int main()
+{
+
+    for(int i=0;i<20000;i++)
+    {
+        scanf("%s",s);
+        a.push_back(get_hash(s));
+    }
+    sort(a.begin(),a.end());
+    a.erase(unique(a.begin(),a.end()),a.end());
+    printf("%d\n",a.size());
+}
