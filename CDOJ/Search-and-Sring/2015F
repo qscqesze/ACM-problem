@@ -1,0 +1,230 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+map<int,int> vis1;
+map<int,int> vis2;
+char s[100];
+int dx[4]={1,-1,0,0};
+int dy[4]={0,0,1,-1};
+struct node
+{
+    int m[3][3];
+    int x,y;
+    int ha;
+    int t;
+};
+node st;
+int check()
+{
+    int a[9],t=0;
+    for(int i=0;i<3;i++)
+        for(int j=0;j<3;j++)
+            a[t++]=st.m[i][j];
+    t=0;
+    for(int i=0;i<9;i++)
+        for(int j=i+1;j<9;j++)
+            if(a[i]&&a[j]&&a[i]>a[j])
+                t++;
+    return t&1;
+}
+int get_ha(node b)
+{
+    int sum=0;
+    int a[9],t=0;
+    for(int i=0;i<3;i++)
+        for(int j=0;j<3;j++)
+            a[t++]=b.m[i][j];
+
+    ll N=1998585857;
+    long long h=0;
+    for(int i=0;i<9;i++)
+        h=(h*12+(a[i])+N)%N;
+    return h%N;
+}
+int main()
+{
+    char ch;
+    node aimm;
+    aimm.m[0][0]=1;
+    aimm.m[0][1]=2;
+    aimm.m[0][2]=3;
+    aimm.m[1][0]=4;
+    aimm.m[1][1]=5;
+    aimm.m[1][2]=6;
+    aimm.m[2][0]=7;
+    aimm.m[2][1]=8;
+    aimm.m[2][2]=0;
+    aimm.x=2;
+    aimm.y=2;
+    aimm.t=1;
+    int aim=get_ha(aimm);
+    aimm.ha=aim;
+    while(cin>>ch)
+    {
+        vis1.clear();
+        vis2.clear();
+        s[0]=ch;
+        for(int i=1;i<9;i++)
+        {
+            cin>>ch;
+            s[i]=ch;
+        }
+        int m=0;
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                if(s[m]=='x')st.m[i][j]=0,st.x=i,st.y=j;
+                else st.m[i][j]=s[m]-'0';
+                m++;
+            }
+        }
+
+        if(check())
+        {
+            printf("unsolvable\n");
+            continue;
+        }
+        st.t=1;
+        st.ha=get_ha(st);
+        vis1[st.ha]=1;
+        vis2[aimm.ha]=1;
+        queue<node> q;
+        queue<node> q2;
+        q2.push(aimm);
+        q.push(st);
+        while(!q.empty()||!q2.size())
+        {
+            if(!q.empty())
+            {
+                node now=q.front();
+                /*
+                cout<<now.t<<" "<<1<<endl;
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        cout<<now.m[i][j];
+                    }
+                    cout<<endl;
+                }
+                cout<<endl;
+                */
+                if(vis2[now.ha])
+                {
+                    //cout<<now.t<<" "<<"1231231"<<endl;
+                    printf("%d\n",now.t+vis2[now.ha]-2);
+                    break;
+                }
+                q.pop();
+                for(int i=0;i<4;i++)
+                {
+                    node next=now;
+                    next.t++;
+                    if(next.x+dx[i]<0||next.x+dx[i]>=3)
+                        continue;
+                    if(next.y+dy[i]<0||next.y+dy[i]>=3)
+                        continue;
+                    swap(next.m[next.x][next.y],next.m[next.x+dx[i]][next.y+dy[i]]);
+                    next.ha=get_ha(next);
+                    next.x+=dx[i];
+                    next.y+=dy[i];
+                    if(vis1[next.ha]>0)
+                        continue;
+                    vis1[next.ha]=next.t;
+                    q.push(next);
+                }
+            }
+            if(!q2.empty())
+            {
+                node now=q2.front();
+                /*
+                cout<<now.t<<" "<<2<<endl;
+                for(int i=0;i<3;i++)
+                {
+                    for(int j=0;j<3;j++)
+                    {
+                        cout<<now.m[i][j];
+                    }
+                    cout<<endl;
+                }
+                cout<<endl;
+                */
+                if(vis1[now.ha])
+                {
+                    //cout<<now.t<<" "<<"12312131"<<endl;
+                    printf("%d\n",now.t+vis1[now.ha]-2);
+                    break;
+                }
+                q2.pop();
+                for(int i=0;i<4;i++)
+                {
+                    node next=now;
+                    next.t++;
+                    if(next.x+dx[i]<0||next.x+dx[i]>=3)
+                        continue;
+                    if(next.y+dy[i]<0||next.y+dy[i]>=3)
+                        continue;
+                    swap(next.m[next.x][next.y],next.m[next.x+dx[i]][next.y+dy[i]]);
+                    next.ha=get_ha(next);
+                    next.x+=dx[i];
+                    next.y+=dy[i];
+                    if(vis2[next.ha]>0)
+                        continue;
+                    vis2[next.ha]=next.t;
+                    q2.push(next);
+                }
+            }
+        }
+    }
+}
