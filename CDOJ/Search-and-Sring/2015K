@@ -1,0 +1,93 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 2000010
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+//**************************************************************************************
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+
+
+int a[maxn];
+int b[maxn];
+int c[maxn];
+int d[maxn];
+int p[maxn];
+int main()
+{
+    int n=read();
+    for(int i=1;i<=n;i++)
+        a[i]=read();
+    int m=read();
+    for(int i=1;i<=m;i++)
+        b[i]=read();
+    n--;
+    for(int i=1;i<=n;i++)
+        c[i]=a[i+1]-a[i];
+    m--;
+    for(int i=1;i<=m;i++)
+        d[i]=b[i+1]-b[i];
+    int j=0;
+    for(int i=2;i<=m;i++)
+    {
+        while(j>0&&d[j+1]!=d[i])j=p[j];
+        if(d[j+1]==d[i])j++;
+        p[i]=j;
+    }
+    j=0;
+    int ans=0;
+    for(int i=1;i<=n;i++)
+    {
+        while(j>0&&d[j+1]!=c[i])j=p[j];
+        if(d[j+1]==c[i])j++;
+        if(j==m){ans++;j=p[j];}
+    }
+    if(ans)
+        printf("Wow! Life Winner!\n%d\n",ans);
+    else
+        printf("Oh. That's impossible. I must have had a dream.\n");
+}
