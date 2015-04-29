@@ -1,0 +1,149 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+int mp[30];
+int H[30];
+string s[11];
+int n,tmp;
+char k[100];
+int vis[12],ans=0,ma;
+int tp[30];
+int ans1[30];
+int ans2[30];
+int check()
+{
+    ans1[ma]=0;
+    for(int i=ma-1;i>=0;i--)
+    {
+        ans1[i]=0;
+        ans2[i]=0;
+        for(int j=0;j<n-1;j++)
+        {
+            if(H[s[j][i]-'A']==-1)
+                return 0;
+            ans1[i]+=H[s[j][i]-'A'];
+        }
+        ans1[i]+=(ans1[i+1]/10);
+        if(H[s[n-1][i]-'A']==-1)
+            return 0;
+        ans2[i]+=H[s[n-1][i]-'A'];
+        if((ans1[i]%10)!=ans2[i])
+            return 1;
+    }
+    if(ans1[0]>9)
+        return 1;
+    return 0;
+}
+void dfs(int x)
+{
+    if(x==tmp)
+    {
+        ans++;
+        return;
+    }
+    for(int i=9;i>=0;i--)
+    {
+        if(i==0&&tp[k[x]-'A'])
+            continue;
+        if(vis[i])
+            continue;
+        vis[i]=1;
+        H[k[x]-'A']=i;
+        if(!check())
+            dfs(x+1);
+        vis[i]=0;
+        H[k[x]-'A']=-1;
+    }
+}
+
+int main()
+{
+    while(scanf("%d",&n)!=EOF)
+    {
+        for(int i=0;i<30;i++)
+            mp[i]=tp[i]=H[i]=0;
+        ma=0;
+        for(int i=0;i<n;i++)
+            cin>>s[i],ma=max(ma,(int)s[i].size());
+        for(int i=0;i<n;i++)
+            tp[s[i][0]-'A']=1;
+        for(int i=0;i<n;i++)
+        {
+            int len=s[i].size();
+            for(int j=0;j<ma-len;j++)
+            {
+                s[i]='['+s[i];
+            }
+        }
+        tmp=0;
+        ans=0;
+        for(int i=ma-1;i>=0;i--)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(mp[s[j][i]-'A'])
+                    continue;
+                if(s[j][i]=='[')
+                    continue;
+                k[tmp++]=s[j][i];
+                mp[s[j][i]-'A']=1;
+            }
+        }
+        for(int i=0;i<tmp;i++)
+            H[k[i]-'A']=-1;
+
+        H['['-'A']=0;
+        dfs(0);
+        printf("%d\n",ans);
+    }
+}
