@@ -1,0 +1,94 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 2000010
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+char s[maxn];
+char str[maxn*2];
+int l;
+int p[maxn*2];
+int manacher(char s[],int l)
+{
+   int i,j,k,ans=0;
+   for(i=1;i<=l;++i)str[i<<1]=s[i],str[(i<<1)+1]='#';
+   str[1]='#';str[l*2+1]='#';str[0]='&';str[l*2+2]='$';
+   l=l*2+1;j=0;
+   for(i=1;i<=l;)
+   {
+       while(str[i-j-1]==str[i+j+1])++j;
+       p[i]=j;if(j>ans)ans=j;
+       for(k=1;k<=j&&p[i]-k!=p[i-k];++k)p[i+k]=min(p[i-k],p[i]-k);
+       i+=k;j=max(j-k,0);
+   }
+   return ans;
+}
+
+int main()
+{
+    scanf("%s",s+1);
+    l=strlen(s+1);
+    manacher(s,l);
+    l=l*2+1;
+    int ans=0;
+    for(int i=2;i<=(l+1)/2;i++)
+    {
+        int tmp=p[i];
+        int pos=i;
+        while(tmp+1>=pos&&tmp!=0)
+        {
+            ans++;
+            pos=(pos+1)/2;
+            tmp=p[pos];
+        }
+        //cout<<ans<<endl;
+    }
+    cout<<ans<<endl;
+}
