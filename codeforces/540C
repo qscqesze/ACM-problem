@@ -1,0 +1,100 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //§ß§é§à§é¨f§³
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    int x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+string s[1000];
+int dx[4]={1,-1,0,0};
+int dy[4]={0,0,1,-1};
+struct node
+{
+    int x,y;
+    int t;
+};
+int vis[1000][1000];
+int main()
+{
+    int n=read(),m=read();
+    for(int i=0;i<n;i++)
+        cin>>s[i];
+    node st,ed;
+    cin>>st.x>>st.y;
+    st.x--,st.y--;
+    st.t=0;
+    cin>>ed.x>>ed.y;
+    ed.x--,ed.y--;
+    queue<node> q;
+    q.push(st);
+    while(!q.empty())
+    {
+        node now=q.front();
+        q.pop();
+        for(int i=0;i<4;i++)
+        {
+            node next=now;
+            next.x+=dx[i];
+            next.y+=dy[i];
+            next.t++;
+            if(next.x<0||next.x>=n||next.y<0||next.y>=m)
+                continue;
+            if(next.x==ed.x&&next.y==ed.y&&s[next.x][next.y]=='X')
+            {
+                printf("YES\n");
+                return 0;
+            }
+            if(s[next.x][next.y]=='X')
+                continue;
+            q.push(next);
+            s[next.x][next.y]='X';
+        }
+    }
+    printf("NO\n");
+}
