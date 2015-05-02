@@ -116,12 +116,12 @@ int main()
         {
             for(int j=H2[a[p].y1];j<=H2[a[p].y2];j++)
             {
-                i=fi(i,j);
+                j=fi(i,j);
                 mp[i][j]=a[p].c;
                 if(!flag[a[p].c])
                     ans++;
                 flag[a[p].c]=1;
-                fa[i][j]=i+1;
+                fa[i][j]=j+1;
             }
         }
     }
