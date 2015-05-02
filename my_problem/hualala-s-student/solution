@@ -18,12 +18,12 @@ using namespace std;
 //freopen("D.in","r",stdin);
 //freopen("D.out","w",stdout);
 #define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
-#define maxn 200001
+#define maxn 4005
 #define mod 10007
 #define eps 1e-9
 int Num;
 char CH[20];
-//const int inf=0x7fffffff;   //нчоч╢С
+//const int inf=0x7fffffff;   //§ß§é§à§é¨f§³
 const int inf=0x3f3f3f3f;
 /*
 
@@ -62,8 +62,8 @@ vector<int> q1;
 vector<int> q2;
 map<int,int> H1;
 map<int,int> H2;
-int fa[10010][10010];
-int mp[10010][10010];
+int fa[2010][2010];
+int mp[2010][2010];
 map<int,int> flag;
 int ans;
 
@@ -82,8 +82,10 @@ int fi(int x,int y)
 int main()
 {
     scanf("%d%d%d",&n,&m,&c);
-    q1.push_back(n),q2.push_back(m);
-    q1.push_back(1),q2.push_back(1);
+    q1.push_back(n);
+    q2.push_back(m);
+    q1.push_back(1);
+    q2.push_back(1);
     scanf("%d",&k);
     for(int i=0;i<k;i++)
     {
@@ -93,18 +95,19 @@ int main()
         q2.push_back(a[i].y1);
         q2.push_back(a[i].y2);
     }
-    a[k].x1=1,a[k].y1=n,a[k].x2=m,a[k].y2=1,a[k].c=c,a[k].t=0;
+    a[k].x1=1,a[k].y1=1,a[k].x2=n,a[k].y2=m,a[k].c=c,a[k].t=0;
 
     sort(a,a+k+1,cmp);
 
     sort(q1.begin(),q1.end());
+    sort(q2.begin(),q2.end());
     q1.erase(unique(q1.begin(),q1.end()),q1.end());
     q2.erase(unique(q2.begin(),q2.end()),q2.end());
 
     for(int i=0;i<q1.size();i++)
         H1[q1[i]]=i+1;
     for(int i=0;i<q2.size();i++)
-        H2[q1[i]]=i+1;
+        H2[q2[i]]=i+1;
 
     for(int i=1;i<=q1.size()+1;i++)
         for(int j=1;j<=q2.size()+1;j++)
@@ -127,6 +130,5 @@ int main()
             }
         }
     }
-
     printf("%d\n",ans);
 }
