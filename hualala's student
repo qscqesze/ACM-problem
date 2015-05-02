@@ -114,7 +114,7 @@ int main()
     {
         for(int i=H1[a[p].x1];i<=H1[a[p].x2];i++)
         {
-            for(int j=H2[a[p].y2];j<=H2[a[p].y1];j++)
+            for(int j=H2[a[p].y1];j<=H2[a[p].y2];j++)
             {
                 i=fi(i,j);
                 mp[i][j]=a[p].c;
