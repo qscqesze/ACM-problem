@@ -1,0 +1,83 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+#include <windows.h>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //§ß§é§à§é¨f§³
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+struct node
+{
+    int x1,y1,x2,y2,c,t;
+};
+node a[maxn];
+int main()
+{
+    srand((int)time(0));
+    int n,m,c;
+    int k;
+    n=100;
+    m=100;
+    c=2;
+    k=10;
+    //cin>>n>>m>>c>>k;
+    printf("%d %d %d\n",n,m,c);
+    printf("%d\n",k);
+    for(int i=0;i<k;i++)
+    {
+        a[i].x1=rand()%n+1,a[i].y1=rand()%m+1;
+        while(a[i].x2<a[i].x1)
+            a[i].x2=rand()%n+1;
+        while(a[i].y2<a[i].y1)
+            a[i].y2=rand()%m+1;
+        a[i].t=rand();
+        a[i].c=rand();
+        printf("%d %d %d %d %d %d\n",a[i].x1,a[i].y1,a[i].x2,a[i].y2,a[i].c,a[i].t);
+    }
+}
