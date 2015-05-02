@@ -64,7 +64,7 @@ map<int,int> H1;
 map<int,int> H2;
 int fa[10010][10010];
 int mp[10010][10010];
-int flag[10010];
+map<int,int> flag;
 int ans;
 
 bool cmp(node b,node c)
