@@ -1,0 +1,129 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+
+#define N 262144
+int A[252521],B[252521],L[252521],R[252521];
+ll C[252521];
+struct node
+{
+    int x,y;
+};
+bool cmp(node a,node b)
+{
+    if(a.x==b.x)
+        return a.y<b.y;
+    return a.x<b.x;
+}
+vector<node> p,q;
+vector<int> x,y;
+//int inf=1145141919;
+int dat[N*2+10];
+int query(int a,int b,int k=0,int l=0,int r=N){
+	if(r<=a || b<=l) return -inf;
+	if(a<=l && r<=b) return dat[k];
+	int vl=query(a,b,k*2+1,l,(l+r)/2);
+	int vr=query(a,b,k*2+2,(l+r)/2,r);
+	return max(vl,vr);
+}
+int main()
+{
+	int n,m,id=-1,r=0;ll out=0;
+	cin>>n>>m;
+	for(int i=0;i<n;i++)
+    {
+		//cin>>L[i]>>R[i];
+		scanf("%d %d",&L[i],&R[i]);
+		p.push_back((node){L[i],-R[i]});
+	}
+	sort(p.begin(),p.end(),cmp);
+	for(int i=0;i<n;i++)
+	{
+		if(-p[i].y>r)
+		{
+			q.push_back(p[i]);
+			r=-p[i].y;
+		}
+	}
+	for(int i=0;i<q.size();i++) 
+        x.push_back(q[i].x),y.push_back(-q[i].y);
+	for(int i=0;i<N*2+10;i++) 
+        dat[i]=-inf;
+	for(int i=0;i<q.size();i++)
+        dat[N-1+i]=-q[i].x-q[i].y;
+	for(int i=N-2;i>=0;i--) dat[i]=max(dat[i*2+1],dat[i*2+2]);
+	for(int i=0;i<m;i++)
+	{
+		//cin>>A[i]>>B[i]>>C[i];
+		scanf("%d %d %d",&A[i],&B[i],&C[i]);
+		int lo=lower_bound(x.begin(),x.end(),A[i])-x.begin();
+		int hi=lower_bound(y.begin(),y.end(),B[i]+1)-y.begin();
+		ll ret=C[i]*query(lo,hi);
+		if(lo>0){
+			ret=max(ret,C[i]*(min(B[i],-q[lo-1].y)-A[i]));
+		}
+		if(hi<q.size()){
+			ret=max(ret,C[i]*(B[i]-max(A[i],q[hi].x)));
+		}
+		if(out<ret){out=ret;id=i;}
+	}
+	cout<<out<<endl;
+	if(out>0){
+		for(int i=0;i<n;i++){
+			if(C[id]*(min(B[id],R[i])-max(A[id],L[i]))==out){
+				cout<<i+1<<' '<<id+1<<endl;
+				break;
+			}
+		}
+	}
+}
