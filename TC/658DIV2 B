@@ -1,0 +1,304 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+
+class MutaliskEasy{
+public:
+    int vis[60][60][60];
+    struct node
+    {
+        int x,y,z;
+        int t;
+    };
+	int minimalAttacks(vector <int> x){
+	    node a;
+	    a.x=0,a.y=0,a.z=0,a.t=0;
+	    if(x.size()==1)
+            a.x=x[0];
+        if(x.size()==2)
+            a.x=x[0],a.y=x[1];
+        if(x.size()==3)
+            a.x=x[0],a.y=x[1],a.z=x[2];
+	    queue<node> q;
+	    vis[a.x][a.y][a.z]=0;
+	    q.push(a);
+	    int ans=0;
+	    while(!q.empty())
+        {
+            node now=q.front();
+            if(now.x==0&&now.y==0&&now.z==0)
+            {
+                return now.t;
+            }
+            q.pop();
+            node next=now;
+            next.t++;
+            next.x=max(now.x-9,0);
+            next.y=max(now.y-3,0);
+            next.z=max(now.z-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+            next.x=max(now.x-9,0);
+            next.z=max(now.z-3,0);
+            next.y=max(now.y-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+            next.y=max(now.y-9,0);
+            next.x=max(now.x-3,0);
+            next.z=max(now.z-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+            next.y=max(now.y-9,0);
+            next.z=max(now.z-3,0);
+            next.x=max(now.x-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+
+            next.z=max(now.z-9,0);
+            next.y=max(now.y-3,0);
+            next.x=max(now.x-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+
+            next.z=max(now.z-9,0);
+            next.x=max(now.x-3,0);
+            next.y=max(now.y-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+        }
+	}
+};
+int main()
+{
+    int n;
+    cin>>n;
+    MutaliskEasy a;
+    vector<int> q;
+    for(int i=0;i<n;i++)
+    {
+        int tmp;
+        cin>>tmp;
+        q.push_back(tmp);
+    }
+    cout<<a.minimalAttacks(q)<<endl;
+}
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+
+class MutaliskEasy{
+public:
+    int vis[60][60][60];
+    struct node
+    {
+        int x,y,z;
+        int t;
+    };
+	int minimalAttacks(vector <int> x){
+	    node a;
+	    a.x=0,a.y=0,a.z=0,a.t=0;
+	    if(x.size()==1)
+            a.x=x[0];
+        if(x.size()==2)
+            a.x=x[0],a.y=x[1];
+        if(x.size()==3)
+            a.x=x[0],a.y=x[1],a.z=x[2];
+	    queue<node> q;
+	    vis[a.x][a.y][a.z]=0;
+	    q.push(a);
+	    int ans=0;
+	    while(!q.empty())
+        {
+            node now=q.front();
+            if(now.x==0&&now.y==0&&now.z==0)
+            {
+                return now.t;
+            }
+            q.pop();
+            node next=now;
+            next.t++;
+            next.x=max(now.x-9,0);
+            next.y=max(now.y-3,0);
+            next.z=max(now.z-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+            next.x=max(now.x-9,0);
+            next.z=max(now.z-3,0);
+            next.y=max(now.y-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+            next.y=max(now.y-9,0);
+            next.x=max(now.x-3,0);
+            next.z=max(now.z-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+            next.y=max(now.y-9,0);
+            next.z=max(now.z-3,0);
+            next.x=max(now.x-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+
+            next.z=max(now.z-9,0);
+            next.y=max(now.y-3,0);
+            next.x=max(now.x-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+
+            next.z=max(now.z-9,0);
+            next.x=max(now.x-3,0);
+            next.y=max(now.y-1,0);
+            if(!vis[next.x][next.y][next.z])
+            {
+                vis[next.x][next.y][next.z]=1;
+                q.push(next);
+            }
+        }
+	}
+};
+int main()
+{
+    int n;
+    cin>>n;
+    MutaliskEasy a;
+    vector<int> q;
+    for(int i=0;i<n;i++)
+    {
+        int tmp;
+        cin>>tmp;
+        q.push_back(tmp);
+    }
+    cout<<a.minimalAttacks(q)<<endl;
+}
