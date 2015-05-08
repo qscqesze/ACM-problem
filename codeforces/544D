@@ -1,0 +1,108 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+vector<int> e[maxn];
+int d[3300][3300];
+int vis[3300];
+int main()
+{
+    int n=read(),m=read();
+    int s1,s2,t1,t2,d1,d2;
+    for(int i=1;i<=m;i++)
+    {
+        int x=read(),y=read();
+        e[x].push_back(y);
+        e[y].push_back(x);
+    }
+
+    scanf("%d%d%d%d%d%d",&s1,&t1,&d1,&s2,&t2,&d2);
+    for(int i=1;i<=n;i++)
+    {
+        memset(vis,0,sizeof(vis));
+        queue<int> q;
+        q.push(i);
+        vis[i]=1;
+        while(!q.empty())
+        {
+            int v=q.front();
+            q.pop();
+            for(int j=0;j<e[v].size();j++)
+            {
+                int u=e[v][j];
+                if(vis[u])
+                    continue;
+                vis[u]=1;
+                d[i][u]=d[i][v]+1;
+                q.push(u);
+            }
+        }
+    }
+    if(d[s1][t1]>d1||d[s2][t2]>d2)
+    {
+        puts("-1");
+        return 0;
+    }
+    int ans=d[s1][t1]+d[s2][t2];
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(d[s1][i]+d[i][j]+d[j][t1]<=d1&&d[s2][i]+d[i][j]+d[j][t2]<=d2)
+                ans=min(ans,d[s1][i]+d[i][j]+d[j][t1]+d[s2][i]+d[j][t2]);
+            if(d[s1][i]+d[i][j]+d[j][t1]<=d1&&d[t2][i]+d[i][j]+d[j][s2]<=d2)
+                ans=min(ans,d[s1][i]+d[i][j]+d[j][t1]+d[t2][i]+d[j][s2]);
+        }
+    }
+    cout<<m-ans<<endl;
+
+}
