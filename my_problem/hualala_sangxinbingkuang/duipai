@@ -1,0 +1,16 @@
+#include<iostream>
+#include<windows.h>
+using namespace std;
+int main()
+{
+    int t=100;
+    while(t--)
+    {
+        system("makedata > a+b.in");
+        system("solution < a+b.in > 1.out");
+        system("baoli < a+b.in > 2.out");
+        if(system("fc 1.out 2.out"))   break;
+    }
+    system("pause");
+    return 0;
+}
