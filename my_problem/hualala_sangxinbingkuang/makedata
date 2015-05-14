@@ -1,0 +1,93 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //§ß§é§à§é¨f§³
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+int main()
+{
+    freopen("6.in","w",stdout);
+    srand((unsigned)time(NULL));
+    int n=30000,m=30000;
+    cout<<n<<" "<<m<<endl;
+    for(int i=1;i<=n;i++)
+    {
+        int x=rand()%10000;
+        cout<<x<<" ";
+    }
+    cout<<endl;
+    for(int i=1;i<=m;i++)
+    {
+        int p=rand()%3;
+        if(p==0)
+        {
+            int x=rand()%n+1;
+            int y=rand()%n+1;
+            cout<<p+1<<" "<<x<<" "<<y<<endl;
+        }
+        else if(p==1)
+        {
+            int x=rand()%n+1;
+            int y=1;
+            while(y<x)
+                y=rand()%n+1;
+            cout<<"2 "<<1<<" "<<n<<endl;
+        }
+        else
+        {
+            int x=rand()%n+1;
+            int y=1;
+            while(y<x)
+                y=rand()%n+1;
+            int z=rand()%10000;
+            cout<<"3 "<<1<<" "<<n<<" "<<z<<endl;
+        }
+    }
+}
