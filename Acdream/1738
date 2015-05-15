@@ -1,0 +1,337 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    int x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+
+#define CL(x,v); memset(x,v,sizeof(x));
+#define INF 0x3f3f3f3f
+#define LL long long
+#define REP(i,r,n) for(int i=r;i<=n;i++)
+#define RREP(i,n,r) for(int i=n;i>=r;i--)
+#define lson l,m,root<<1
+#define rson m+1,r,root<<1|1
+const int MAXN=5e4+100;
+
+struct SplayTree {
+    int sz[MAXN*20];
+    int ch[MAXN*20][2];
+    int pre[MAXN*20];
+    int top;
+    int rt[MAXN<<2];
+    inline void up(int x){
+        sz[x]  = cnt[x]  + sz[ ch[x][0] ] + sz[ ch[x][1] ];
+    }
+    inline void Rotate(int x,int f){
+        int y=pre[x];
+        ch[y][!f] = ch[x][f];
+        pre[ ch[x][f] ] = y;
+        pre[x] = pre[y];
+        if(pre[x]) ch[ pre[y] ][ ch[pre[y]][1] == y ] =x;
+        ch[x][f] = y;
+        pre[y] = x;
+        up(y);
+    }
+    inline void Splay(int x,int goal,int root){//将x旋转到goal的下面
+        while(pre[x] != goal){
+            if(pre[pre[x]] == goal) Rotate(x , ch[pre[x]][0] == x);
+            else   {
+                int y=pre[x],z=pre[y];
+                int f = (ch[z][0]==y);
+                if(ch[y][f] == x) Rotate(x,!f),Rotate(x,f);
+                else Rotate(y,f),Rotate(x,f);
+            }
+        }
+        up(x);
+        if(goal==0) rt[root]=x;
+    }
+    inline void RTO(int k,int goal,int root){//将第k位数旋转到goal的下面
+        int x=rt[root];
+        while(sz[ ch[x][0] ] != k-1) {
+            if(k < sz[ ch[x][0] ]+1) x=ch[x][0];
+            else {
+                k-=(sz[ ch[x][0] ]+1);
+                x = ch[x][1];
+            }
+        }
+        Splay(x,goal,root);
+    }
+    inline void vist(int x){
+        if(x){
+            printf("结点%2d : 左儿子  %2d   右儿子  %2d   %2d sz=%d\n",x,ch[x][0],ch[x][1],val[x],sz[x]);
+            vist(ch[x][0]);
+            vist(ch[x][1]);
+        }
+    }
+    inline void Newnode(int &x,int c){
+        x=++top;
+        ch[x][0] = ch[x][1] = pre[x] = 0;
+        sz[x]=1; cnt[x]=1;
+        val[x] = c;
+    }
+    inline void init(){
+        top=0;
+    }
+    inline void Insert(int &x,int key,int f,int root){
+        if(!x) {
+            Newnode(x,key);
+            pre[x]=f;
+            Splay(x,0,root);
+            return ;
+        }
+        if(key==val[x]){
+            cnt[x]++;
+            sz[x]++;
+            return ;
+        }else if(key<val[x]) {
+            Insert(ch[x][0],key,x,root);
+        } else {
+            Insert(ch[x][1],key,x,root);
+        }
+        up(x);
+    }
+
+    void Del(int root){  //删除根结点
+         if(cnt[rt[root]]>1)
+         {
+            cnt[rt[root]]--;
+         }
+         else
+         {
+             int t=rt[root];
+             if(ch[rt[root]][1]) {
+                 rt[root]=ch[rt[root]][1];
+                 RTO(1,0,root);
+                 ch[rt[root]][0]=ch[t][0];
+                 if(ch[rt[root]][0]) pre[ch[rt[root]][0]]=rt[root];
+             }
+             else rt[root]=ch[rt[root]][0];
+             pre[rt[root]]=0;
+         }
+         up(rt[root]);
+    }
+    void findpre(int x,int key,int &ans){  //找key前趋
+        if(!x)  return ;
+        if(val[x] <= key){
+            ans=x;
+            findpre(ch[x][1],key,ans);
+        } else
+            findpre(ch[x][0],key,ans);
+    }
+    void findsucc(int x,int key,int &ans){  //找key后继
+        if(!x) return ;
+        if(val[x]>=key) {
+            ans=x;
+            findsucc(ch[x][0],key,ans);
+        } else
+            findsucc(ch[x][1],key,ans);
+    }
+    void findkey(int x,int key,int &ans)//找key
+    {
+        if(!x)return;
+        if(val[x]==key)
+            ans=x;
+        else if(val[x]>key)
+            findkey(ch[x][0],key,ans);
+        else
+            findkey(ch[x][1],key,ans);
+    }
+    //找第K大数
+    inline int find_kth(int x,int k,int root){
+        if(k<sz[ch[x][0]]+1) {
+            return find_kth(ch[x][0],k,root);
+        }else if(k > sz[ ch[x][0] ] + cnt[x] )
+            return find_kth(ch[x][1],k-sz[ch[x][0]]-cnt[x],root);
+        else{
+            Splay(x,0,root);
+            return val[x];
+        }
+    }
+    int cnt[MAXN*20];
+    int val[MAXN*20];
+//---------------------------------------------
+//建立线段树和线段树中的每个结点的平衡树
+    struct node
+    {
+        int l,r,x;
+    }mi[MAXN*2];
+    void build(int l,int r,int root)
+    {
+        mi[root].x=99999999;
+        mi[root].l=l,mi[root].r=r;
+        rt[root]=0;
+        for(int i=l;i<=r;i++)
+            Insert(rt[root],a[i],0,root);
+        if(l>=r)
+        {
+            mi[root].x=a[r];
+            return;
+        }
+        int m=(l+r)>>1;
+        build(lson);
+        build(rson);
+        mi[root].x=min(mi[root<<1].x,mi[root<<1|1].x);
+    }
+    void updatemi(int x,int l,int k)
+    {
+        int L=mi[x].l,R=mi[x].r;
+        if(L==R)
+        {
+            mi[x].x=k;
+            return;
+        }
+        int mid=(L+R)>>1;
+        if(l<=mid)
+            updatemi(x<<1,l,k);
+        else
+            updatemi(x<<1|1,l,k);
+        mi[x].x=min(mi[x<<1].x,mi[x<<1|1].x);
+    }
+    int querymi(int x,int l,int r)
+    {
+        int L=mi[x].l,R=mi[x].r;
+        if(l<=L&&R<=r)
+            return mi[x].x;
+        int mid=(L+R)>>1;
+        if(r<=mid)
+            return querymi(x<<1,l,r);
+        else if(l>mid)
+            return querymi(x<<1|1,l,r);
+        else
+            return min(querymi(x<<1,l,r),querymi(x<<1|1,l,r));
+    }
+    void update(int l,int r,int root,int i,int x)
+    {
+        int ans=0;
+        findkey(rt[root],a[i],ans);
+        Splay(ans,0,root);
+        Del(root);
+        Insert(rt[root],x,0,root);
+
+        if(l>=r)return;
+        int m=(l+r)>>1;
+        if(i<=m)update(lson,i,x);
+        else update(rson,i,x);
+    }
+    int cntLess(int x,int key)
+    {
+        int ret=0;
+        while(x)
+        {
+            if(val[x]>key)
+                x=ch[x][0];
+            else
+            {
+                ret+=cnt[x]+sz[ch[x][0]];
+                x=ch[x][1];
+            }
+        }
+        return ret;
+    }
+    int getnumLess(int l,int r,int root,int L,int R,int x)
+    {
+        if(L<=l&&R>=r)
+            return cntLess(rt[root],x);
+        int m=(l+r)>>1;
+        int ret=0;
+        if(L<=m)ret+=getnumLess(lson,L,R,x);
+        if(R>m)ret+=getnumLess(rson,L,R,x);
+        return ret;
+    }
+    int search(int L,int R,int k)
+    {
+        int l=0,r=INF;
+        int ans=0;
+        return getnumLess(1,n,1,L,R,k);
+    }
+    void solve()
+    {
+        scanf("%d%d",&n,&m);
+        REP(i,1,n)
+            scanf("%d",&a[i]);
+        build(1,n,1);
+        REP(i,1,m)
+        {
+            int x,y,z;
+            char str[4];
+            scanf("%s",str);
+            if(str[0]=='1')
+            {
+                scanf("%d%d",&x,&y);
+                updatemi(1,x,y);
+                update(1,n,1,x,y);
+                a[x]=y;
+            }
+            else if(str[0]=='2')
+            {
+                scanf("%d%d",&x,&y);
+                int k=querymi(1,x,y);
+                int kk=search(x,y,k)-search(x,y,k-1);
+                printf("%d %d\n",k,kk);
+            }
+            else
+            {
+                scanf("%d%d%d",&x,&y,&z);
+                int k=search(x,y,z);
+                printf("%d\n",k);
+            }
+        }
+    }
+    int a[MAXN];
+    int n,m;
+
+}spt;
+int main()
+{
+    spt.init();
+    spt.solve();
+    return 0;
+}
