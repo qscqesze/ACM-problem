@@ -1,0 +1,108 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <ctime>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    int x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+int a[maxn];
+int dp[maxn];
+int ans[maxn];
+vector<int> k;
+int main()
+{
+	int t=read();
+	while(t--)
+	{
+		memset(a,0,sizeof(a));
+		memset(dp,0,sizeof(dp));
+		memset(ans,0,sizeof(ans));
+		k.clear();
+		int n=read();
+		for(int i=1;i<=n;i++)
+		{
+			a[i]=read();
+			ans[i]=inf;
+		}
+		int max_ans=0;
+		for(int i=1;i<=n;i++)
+		{
+			int d=lower_bound(ans+1,ans+1+n,a[i])-ans;
+			ans[d]=a[i];
+			dp[i]=d;
+			max_ans=max(max_ans,d);
+		}
+		printf("%d\n",max_ans);
+		int kiss=inf;
+		for(int i=n;i>=1;i--)
+		{
+			if(!max_ans)
+				break;
+			if(dp[i]==max_ans&&a[i]<kiss)
+			{
+				kiss=a[i];
+				k.push_back(a[i]);
+				max_ans--;
+			}
+		}
+		int first=1;
+		for(int i=k.size()-1;i+1;i--)
+		{
+			if(first)
+			{
+				printf("%d",k[i]);
+				first=0;
+			}
+			else
+				printf(" %d",k[i]);
+		}
+		printf("\n");
+	}
+}
