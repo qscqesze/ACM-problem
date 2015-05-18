@@ -1,0 +1,97 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    int x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+int get_hash(char *key)
+{
+    ll N=1998585857;
+    long long h=0;
+    while(*key)
+        h=(h*127+(*key++)+N)%N;
+    return h%N;
+}
+int get_hash2(char *key)
+{
+    ll N=127398127;
+    long long h=0;
+    while(*key)
+        h=(h*127+(*key++)+N)%N;
+    return h%N;
+}
+char s[20];
+map< pair<int,int> ,int>H;
+int main()
+{
+    int n=read();
+    for(int i=0;i<n;i++)
+    {
+        scanf("%s",s);
+        pair<int,int> a;
+        a.first=get_hash(s);
+        a.second=get_hash2(s);
+        H[a]++;
+    }
+    int ans=0;
+    for(int i=0;i<n;i++)
+    {
+        scanf("%s",s);
+        pair<int,int> a;
+        a.first=get_hash(s);
+        a.second=get_hash2(s);
+        if(H[a])
+        {
+            ans++;
+            H[a]--;
+        }
+    }
+    printf("%d\n",ans);
+}
