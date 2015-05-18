@@ -1,0 +1,123 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+vector<int> e[maxn];
+struct node
+{
+    int x,y;
+}a[maxn];
+int vis[maxn];
+int cnt;
+void bfs(int x)
+{
+    queue<int> q;
+    vis[x]=1;
+    q.push(x);
+    while(!q.empty())
+    {
+        int now=q.front();
+        q.pop();
+        for(int i=0;i<e[now].size();i++)
+        {
+            int next=e[now][i];
+            if(vis[next])
+                continue;
+            if(!a[next].x)
+            {
+                a[next].x=a[now].y;
+                a[next].y=cnt++;
+            }
+            vis[next]=1;
+            q.push(next);
+        }
+    }
+}
+int main()
+{
+    cnt=10;
+    int n=read();
+    for(int i=0;i<n-1;i++)
+    {
+        int x=read(),y=read();
+        e[x].push_back(y);
+        e[y].push_back(x);
+    }
+    int flag=0;
+    for(int i=1;i<=n;i++)
+    {
+        if(e[i].size()!=1)
+        {
+            flag=1;
+            a[i].x=1;
+            a[i].y=2;
+            a[e[i][0]].x=1;
+            a[e[i][0]].y=3;
+            a[e[i][1]].x=2;
+            a[e[i][1]].y=4;
+            bfs(i);
+            break;
+        }
+    }
+    if(flag==0)
+    {
+        for(int i=1;i<=n-1;i++)
+        {
+            a[i].x=i;
+            a[i].y=i+1;
+        }
+        a[n].x=n-1;
+        a[n].y=n;
+    }
+    for(int i=1;i<=n;i++)
+        cout<<a[i].x<<" "<<a[i].y<<endl;
+}
