@@ -1,0 +1,121 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+	int x=0,f=1;char ch=getchar();
+	while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+	return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+vector<int> e[300];
+struct node
+{
+    int x,y;
+}a[300];
+int dp[300][300];
+int dp2[300];
+int n,m;
+void dfs(int u)
+{
+    dp[u][1]=a[u].y;
+    dp[u][0]=0;
+    for(int i=0;i<e[u].size();i++)
+    {
+        int v=e[u][i];
+        dfs(v);
+        for(int j=m;j>=2;j--)
+        {
+            for(int k=1;k<j;k++)
+            {
+                dp[u][j]=max(dp[u][j],dp[v][k]+dp[u][j-k]);
+            }
+        }
+    }
+}
+int main()
+{
+    while(scanf("%d%d",&n,&m)!=EOF)
+    {
+        if(n==0&&m==0)
+            break;
+        memset(dp,0,sizeof(dp));
+        memset(dp2,0,sizeof(dp2));
+        for(int i=0;i<300;i++)
+            e[i].clear();
+        memset(a,0,sizeof(a));
+        for(int i=1;i<=n;i++)
+        {
+            scanf("%d%d",&a[i].x,&a[i].y);
+            if(a[i].x!=0)
+                e[a[i].x].push_back(i);
+        }
+        for(int i=1;i<=n;i++)
+        {
+            if(a[i].x==0)
+                dfs(i);
+        }
+        for(int i=1;i<=n;i++)
+        {
+            if(a[i].x==0)
+                for(int j=m;j>=0;j--)
+                    for(int k=1;k<=j;k++)
+                    {
+                        dp2[j]=max(dp2[j],dp2[j-k]+dp[i][k]);
+                    }
+
+        }
+        int ans=dp2[m];
+        /*
+        for(int i=1;i<300;i++)
+        {
+            for(int j=1;j<300;j++)
+                ans=max(ans,dp[i][j]);
+        }
+        */
+        printf("%d\n",ans);
+    }
+}
