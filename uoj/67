@@ -1,0 +1,127 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    ll x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+struct edge
+{
+	int v,next;
+};
+edge e[maxn];
+int cnt,head[maxn];
+void insert(int x,int y)
+{
+	e[cnt].v=y;
+	e[cnt].next=head[x];
+	head[x]=cnt;
+	cnt++;
+}
+int n,m,times,rootCnt;
+int deg[maxn],dfn[maxn],low[maxn];
+bool state[maxn],cut[maxn];
+
+void tarjan(int u,int pre)
+{
+	dfn[u]=low[u]=++times;
+	state[u]=1;
+	for(int i=head[u];i!=-1;i=e[i].next)
+	{
+		int v=e[i].v;
+		if(v==pre)
+			continue;
+		if(!state[v])
+		{
+			tarjan(v,u);
+			low[u]=min(low[u],low[v]);
+		}
+		else if(state[v]==1)
+			low[u]=min(low[u],dfn[v]);
+	}
+	if(dfn[pre]<=low[u])
+	{
+		if(pre==1)
+		{
+			rootCnt++;
+		}
+		else
+			cut[pre]=1;
+	}
+}
+int main()
+{
+	//freopen("test.txt","r",stdin);
+	n=read(),m=read();
+	int a,b;
+	for(int i=1;i<=n;i++)
+		head[i]=-1;
+	for(int i=0;i<m;i++)
+	{
+		a=read(),b=read();
+		insert(a,b);
+		insert(b,a);
+		deg[a]++;
+		deg[b]++;
+	}
+	tarjan(1,0);
+	if(rootCnt>1)
+		cut[1]=1;
+	int ans=0;
+	for(int i=1;i<=n;i++)
+	{
+		if(!cut[i]&&(m-deg[i])==n-2)
+			ans++;
+	}
+	printf("%d\n",ans);
+	for(int i=1;i<=n;i++)
+		if(!cut[i]&&(m-deg[i])==n-2)
+			printf("%d ",i);
+	printf("\n");
+}
