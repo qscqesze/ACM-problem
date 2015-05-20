@@ -1,0 +1,139 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    ll x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+struct node
+{
+    int num,v,w,next;
+}edge[600010];
+struct node2
+{
+    int u;
+    ll d;
+    bool operator <(const node2 a)const
+    {
+        return a.d<d;
+    }
+};
+priority_queue<node2> qu;
+node2 A;
+int T,t,n,m,Head[300010],tot;
+ll dis[300010],cost[300010],use[300010],INF=1e16;
+bool vis[300010],vis2[300010];
+void add(int u,int v,int w,int num)
+{
+    edge[tot].num=num;
+    edge[tot].v=v;
+    edge[tot].w=w;
+    edge[tot].next=Head[u];
+    Head[u]=tot++;
+}
+int main()
+{
+    int i,j,k,u,v,w,num;
+    ll ans;
+    scanf("%d%d",&n,&m);
+    memset(Head,-1,sizeof(Head));
+    for(i=1;i<=m;i++)
+    {
+        scanf("%d%d%d",&u,&v,&w);
+        add(u,v,w,i);
+        add(v,u,w,i);
+    }
+    for(i=1;i<=n;i++)
+       dis[i]=cost[i]=INF;
+    scanf("%d",&u);
+    dis[u]=0;cost[u]=0;
+    A.u=u;A.d=0;
+    qu.push(A);
+    while(!qu.empty())
+    {
+        A=qu.top();
+        qu.pop();
+        u=A.u;
+        if(vis[u])
+            continue;
+        vis[u]=1;
+        vis2[use[u]]=1;
+        for(i=Head[u];i!=-1;i=edge[i].next)
+        {
+            v=edge[i].v;
+            w=edge[i].w;
+            num=edge[i].num;
+            if(dis[u]+w<dis[v])
+            {
+                dis[v]=dis[u]+w;
+                cost[v]=w;
+                use[v]=num;
+                A.u=v;A.d=dis[v];
+                qu.push(A);
+            }
+            else if(dis[u]+w==dis[v] && w<cost[v])
+            {
+                cost[v]=w;
+                use[v]=num;
+            }
+        }
+    }
+    ans=0;
+    for(i=1;i<=m;i++)
+       if(vis2[i])
+         ans+=edge[i*2-1].w;
+    printf("%I64d\n",ans);
+    if(ans>0)
+    {
+        for(i=1;i<=m;i++)
+           if(vis2[i])
+             printf("%d ",i);
+        printf("\n");
+    }
+}
