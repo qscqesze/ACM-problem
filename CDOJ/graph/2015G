@@ -1,0 +1,144 @@
+
+
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    ll x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+
+
+struct edge
+{
+    int to,cap,rev;
+};
+vector<edge> g[maxn];
+int level[maxn];
+int iter[maxn];
+void add_edge(int from,int to,int cap)
+{
+    g[from].push_back((edge){to,cap,g[to].size()});
+    g[to].push_back((edge){from,0,g[from].size()-1});
+}
+void bfs(int s)
+{
+    memset(level,-1,sizeof(level));
+    queue<int> que;
+    level[s]=0;
+    que.push(s);
+    while(!que.empty())
+    {
+        int v=que.front();
+        que.pop();
+        for(int i=0;i<g[v].size();i++)
+        {
+            edge &e=g[v][i];
+            if(e.cap>0&&level[e.to]<0)
+            {
+                level[e.to]=level[v]+1;
+                que.push(e.to);
+            }
+        }
+    }
+}
+int dfs(int v,int t,int f)
+{
+    if(v==t)return f;
+    for(int &i=iter[v];i<g[v].size();i++)
+    {
+        edge &e=g[v][i];
+        if(e.cap>0&&level[v]<level[e.to])
+        {
+            int d=dfs(e.to,t,min(f,e.cap));
+            if(d>0)
+            {
+                e.cap-=d;
+                g[e.to][e.rev].cap+=d;
+                return d;
+            }
+        }
+    }
+    return 0;
+}
+int max_flow(int s,int t)
+{
+    int flow=0;
+    while(1)
+    {
+        bfs(s);
+        if(level[t]<0)return flow;
+        memset(iter,0,sizeof(iter));
+        int f;
+        while((f=dfs(s,t,inf))>0)
+            flow+=f;
+    }
+}
+int num[maxn];
+int main()
+{
+    //freopen("test.txt","r",stdin);
+    int n=read(),m=read();
+    for(int i=1;i<=n;i++)
+    {
+		add_edge(0,i,1);
+		num[i]=read();
+		for(int j=0;j<num[i];j++)
+		{
+			int x=read();
+			add_edge(i,n+x,1);
+		}
+    }
+    for(int i=1;i<=m;i++)
+    {
+		add_edge(i+n,n+m+1,1);
+    }
+    printf("%d\n",max_flow(0,n+m+1));
+}
+
