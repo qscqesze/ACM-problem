@@ -1,0 +1,177 @@
+
+
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+#define L(x) (x<<1)
+#define R(x) (x<<1|1)
+#define Mid(x,y) ((x+y)>>1)
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    ll x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+struct Edge{
+	ll from, to, dis,nex;
+	bool yes;
+}edge[maxn<<1];
+ll head[maxn], edgenum;
+ll dis[maxn];
+void addedge(ll u, ll v, ll d){
+	Edge E={u,v,d,head[u],false};
+	edge[edgenum] = E;
+	head[u] = edgenum++;
+}
+ll son[maxn],top[maxn],fp[maxn],p[maxn],siz[maxn],dep[maxn],fa[maxn],tree_id;
+void dfs(ll u, ll father, ll deep){
+	fa[u] = father; dep[u] = deep;
+	siz[u] = 1;
+	for(ll i = head[u]; ~i; i = edge[i].nex){
+		ll v = edge[i].to; if(v == father)continue;
+		dfs(v, u, deep+1);
+		siz[u] += siz[v];
+		if(son[u] == -1 || siz[son[u]]<siz[v])son[u] = v;
+		dis[v] = edge[i].dis;
+		edge[i].yes = true;
+	}
+}
+void getpos(ll u, ll toppos){
+	p[u] = tree_id++; fp[p[u]] = u;
+	top[u] = toppos;
+	if(son[u] == -1)return;
+	if(u==0)getpos(son[u],son[u]);
+	else getpos(son[u], toppos);
+	for(int i = head[u]; ~i; i = edge[i].nex)
+	{
+		int v = edge[i].to; if(v == fa[u] || v == son[u])continue;
+		getpos(v,v);
+	}
+}
+struct node{
+	ll l, r;
+	ll sum;
+}tree[maxn*8];
+void updata_up(ll id){
+	tree[id].sum = tree[L(id)].sum+tree[R(id)].sum;
+}
+void build(ll l, ll r, ll id){
+	tree[id].l = l, tree[id].r = r;
+	tree[id].sum = 0;
+	if(l == r)return ;
+	int mid = Mid(l,r);
+	build(l,mid,L(id)), build(mid+1,r,R(id));
+}
+void updata(ll pos, ll val, ll id){
+	if(tree[id].l == tree[id].r)
+	{
+		tree[id].sum = val;
+		return;
+	}
+	ll mid = Mid(tree[id].l,tree[id].r);
+	if(pos <= mid)updata(pos, val, L(id));
+	else updata(pos, val, R(id));
+	updata_up(id);
+}
+ll query(ll l, ll r, ll id){
+	if(l <= tree[id].l && tree[id].r <= r)return tree[id].sum;
+	ll mid = Mid(tree[id].l, tree[id].r);
+	ll ans = 0;
+	if(l <= mid)ans+=query(l,r,L(id));
+	if(r >  mid)ans+=query(l,r,R(id));
+	return ans;
+}
+ll Query(ll x,ll y){ 
+	ll f1 = top[x], f2 = top[y];
+	ll ans = 0;
+	while(f1 != f2)
+	{
+		if(dep[f1]<dep[f2])swap(f1,f2),swap(x,y);
+
+		ans += query(p[f1],p[x],1);
+		x = fa[f1];
+		f1 = top[x];
+	}
+	if(dep[x] > dep[y])swap(x,y);
+	return ans + query(p[x],p[y],1) - query(p[x],p[x],1);;
+}
+void change(ll pos, ll val){
+	Edge &E = edge[pos<<1]; if(E.yes == false) E = edge[pos<<1|1];
+	E.dis = val;
+	updata(p[E.to], val, 1);
+}
+ll n, m;
+void init(){
+	memset(head, -1, sizeof(head)), edgenum = 0;
+	memset(son, -1, sizeof(son));
+	tree_id = 1;
+}
+int main(){
+    //freopen("test.txt","r",stdin);
+	ll i, j, u, v, d;
+	while(scanf("%d",&n)!=EOF)
+	{
+		init();
+		for(i = 1; i < n; i++) {
+            u=read(),v=read(),d=read();
+			addedge(u,v,d);
+			addedge(v,u,d);
+		}
+		dfs(1,1,0);
+		getpos(1,1);
+		build(1,n,1);
+		updata(p[1],0,1);
+		for(i = 2; i <= n; i++)	updata(p[i],dis[i],1);
+		m=read();
+		while(m--)
+		{
+			d=read(),u=read(),v=read();
+			if(d == 2)change(u-1,v);
+			else    printf("%lld\n",Query(u,v));
+		}
+	}
+	return 0;
+}
+
