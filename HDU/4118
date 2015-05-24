@@ -1,0 +1,105 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 200001
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    ll x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+#pragma comment(linker, "/STACK:102400000,102400000")
+struct node
+{
+    int x,y;
+};
+struct edge
+{
+    int x,y,z;
+};
+int n,m;
+vector<node> e[maxn];
+edge ee[maxn];
+int dp[maxn];
+int vis[maxn];
+void dfs(int x)
+{
+    dp[x]+=1;
+    for(int i=0;i<e[x].size();i++)
+    {
+        node v=e[x][i];
+        if(dp[v.x]==0)
+        {   
+            dfs(v.x);
+            dp[x]+=dp[v.x];
+        }
+    }
+}
+int main()
+{
+	//freopen("test.txt","r",stdin);
+	int t=read();
+	for(int cas=1;cas<=t;cas++)
+	{
+        memset(dp,0,sizeof(dp));
+        n=read();
+        for(int i=1;i<=n;i++)
+            e[i].clear();
+        for(int i=1;i<n;i++)
+        {
+            ee[i].x=read(),ee[i].y=read(),ee[i].z=read();
+            e[ee[i].x].push_back(node{ee[i].y,ee[i].z});
+            e[ee[i].y].push_back(node{ee[i].x,ee[i].z});
+        }
+        ll ans=0;
+        dfs(1);
+        for(int i=1;i<n;i++)
+        {
+            int kiss=min(dp[ee[i].x],dp[ee[i].y]);
+            ans+=min(kiss,n-kiss)*ee[i].z*2;
+        }
+        printf("Case #%d: %lld\n",cas,ans);
+	}
+}
