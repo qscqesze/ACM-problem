@@ -1,0 +1,149 @@
+//qscqesze
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <ctime>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <typeinfo>
+#include <fstream>
+#include <map>
+#include <stack>
+typedef long long ll;
+using namespace std;
+//freopen("D.in","r",stdin);
+//freopen("D.out","w",stdout);
+#define sspeed ios_base::sync_with_stdio(0);cin.tie(0)
+#define maxn 100
+#define mod 10007
+#define eps 1e-9
+int Num;
+char CH[20];
+//const int inf=0x7fffffff;   //нчоч╢С
+const int inf=0x3f3f3f3f;
+/*
+
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+*/
+inline ll read()
+{
+    ll x=0,f=1;char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void P(int x)
+{
+    Num=0;if(!x){putchar('0');puts("");return;}
+    while(x>0)CH[++Num]=x%10,x/=10;
+    while(Num)putchar(CH[Num--]+48);
+    puts("");
+}
+//**************************************************************************************
+
+int dis[maxn][maxn];
+int dp[maxn][1<<8][1<<8];
+int pas[1<<8];
+int ans;
+int t[maxn],ft[maxn],pos[maxn];
+int n,m,k;
+void init()
+{
+    ans=inf;
+    memset(dp,0x3f,sizeof(dp));  
+    memset(dis,0x3f,sizeof(dis));  
+    memset(pas,0,sizeof(pas));    
+}
+void flyod()
+{
+    for(int k=1;k<=n;k++)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            if(i!=k)
+            for(int j=1;j<=n;j++)
+            {
+                if(j!=i&&j!=k)
+                dis[i][j]=min(dis[i][k]+dis[k][j],dis[i][j]);
+            }
+        }
+    }
+}
+void solve()  
+{  
+    dp[1][0][0]=0;  
+    for(int s1=0;s1<(1<<k);s1++)  
+    {  
+        for(int s2=0;s2<(1<<k);s2++)  
+        {  
+            for(int i=1;i<=n;i++)  
+            {  
+                int now=dp[i][s1][s2];  
+  
+                if(now==inf) continue;  
+  
+                if(s2==((1<<k)-1)) ans=min(ans,now+dis[i][1]);  
+  
+                for(int j=0;j<k;j++) if((s2&(1<<j))==0)  
+                {  
+                    int &nxt=dp[pos[j]][ s1|pas[ pos[j] ] ][s2^(1<<j)];  
+  
+                    int add=dis[i][pos[j]];  
+                    if(s1&(1<<j)) add+=ft[j];  
+                    else add+=t[j];  
+  
+                    nxt=min(nxt,now+add);  
+                }  
+                for(int j=1;j<=n;j++)  
+                {  
+                    int &nxt=dp[j][s1|pas[j]][s2];  
+                    int add=dis[i][j];  
+                    nxt=min(nxt,now+add);  
+                }  
+            }  
+        }  
+    }  
+    //return ans;  
+}  
+int main()
+{
+    //freopen("test.txt","r",stdin);
+    int tt=read();
+    for(int cas=1;cas<=tt;cas++)
+    {
+        init();
+  
+        scanf("%d%d%d",&n,&m,&k);  
+        for(int i=0;i<n;i++) dis[i][i]=0;  
+        for(int i=0;i<m;i++)  
+        {  
+            int a,b,c; scanf("%d%d%d",&a,&b,&c);  
+            dis[a][b]=dis[b][a]=c;  
+        }  
+  
+        flyod();  
+  
+        for(int i=0;i<k;i++)  
+        {  
+            scanf("%d%d%d",&pos[i],&t[i],&ft[i]);  
+            int num; scanf("%d",&num);  
+            for(int j=0;j<num;j++)  
+            {  
+                int tmp; scanf("%d",&tmp);  
+                pas[tmp]|=(1<<i);  
+            }  
+        }  
+        solve();
+        printf("Case #%d: %d\n",cas,ans);
+    }
+}
